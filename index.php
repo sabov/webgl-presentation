@@ -18,6 +18,7 @@
   <link rel="stylesheet" media="screen" href="deck.js/extensions/navigation/deck.navigation.css">
   <link rel="stylesheet" media="screen" href="resources/theme.css">
   <!-- Theme -->
+  <link rel="stylesheet" href="resources/transition.css">
   <link rel="stylesheet" href="resources/layout.css">
   <link rel="stylesheet" href="resources/typography.css">
 
@@ -65,10 +66,6 @@
 
 <section class="slide">
   <video class="spotlight" src="videos/webgl-demos.mp4"></video>
-</section>
-
-<section class="slide">
-  <iframe src="http://threejs.org/examples/webgl_particles_sprites" frameborder="0"></iframe>
 </section>
 
 <section class="slide t-1">
@@ -131,7 +128,7 @@
 
   <div class="slide temp inflate">
     <div class="abs-tc"><h3 class="mj">Vertex Shader</h3></div><br>
-    <pre class="wrap overlay halfR small">
+    <pre class="wrap overlay halfR small" style="text-align: left">
 <em>// Global Variables</em>
 <span class="mj-blue">uniform</span> mat4 projectionMatrix;
 <span class="mj-blue">uniform</span> mat4 viewMatrix;
@@ -151,7 +148,7 @@ void main() {
 
   <div class="slide temp inflate">
     <div class="abs-tc"><h3 class="mj">Fragment Shader</h3></div><br>
-    <pre class="wrap overlay halfR small">
+    <pre class="wrap overlay halfR small" style="text-align: left">
 <em>// Global Variables</em>
 <span class="mj-blue">uniform</span> vec3 color;
 <span class="mj-blue">uniform</span> vec3 direction;
