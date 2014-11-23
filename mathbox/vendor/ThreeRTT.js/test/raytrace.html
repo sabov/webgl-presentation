@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Raytracer</title>
+
+  <script type="text/javascript" src="domready.js"></script>
+  <script type="text/javascript" src="tquery-bundle.js"></script>
+  <script type="text/javascript" src="ThreeBox.js"></script>
+  <script type="text/javascript" src="../build/ThreeRTT-tquery.js"></script>
+
+  <style type="text/css" media="screen">
+    html, body {
+      height: 100%;
+    }
+  </style>
+
+  <script type="application/x-glsl" charset="utf-8" id="rt-test">
+  const float MAX_DEPTH = 50.0;
+  const float FOG_DENSITY = .03;
+  const float DELTA = .0001;
+  const float EPSILON = .0005;
+  const float CORRECTION = 1.0;
+  const int STEPS = 64;
+
+  // Raytrace parameters
+  uniform vec3 raytracePosition;
+  uniform mat4 raytraceMatrix;
+  varying vec2 vUV;
+  varying vec3 vRay;
+
+  // Animation
+  uniform float shiftAngle;
+  uniform vec3 shiftOffset;
+
+  // Folds / Transforms
+  vec4 fold(vec4 z) {
+    return vec4(2.*clamp(z.xyz, -1., 1.) - z.xyz, z.w);
+  }
+
+  vec4 warp(vec4 z) {
+    float th = cos(clamp(z.y, -1., 1.) * 3.14) * .1 + .1;
+    float c = cos(th);
+    float s = sin(th);
+    z.xz *= mat2(c, s, -s, c);
+    z.w *= 1.1;
+    return z;
+  }
+
+  vec4 rotate(vec4 z, float th) {
+    float c = cos(th);
+    float s = sin(th);
+    z.xz *= mat2(c, s, -s, c);
+    return z;
+  }
+
+  vec4 invertCylinder(vec4 z, float factor) {
+    float r2 = dot(z.yz, z.yz);
+    float f = factor / r2;
+    return z * f;
+  }
+
+  vec4 invert(vec4 z, float factor) {
+    float r2 = dot(z.xyz, z.xyz);
+    float f = factor / r2;
+    return z * f;
+  }
+
+  vec4 invertRadius(vec4 z, float radius2, float limit) {
+    float r2 = dot(z.xyz, z.xyz);
+    float f = clamp(radius2 / r2, 1., limit);
+    return z * f;
+  }
+
+  vec4 affine(vec4 z, float factor, vec3 offset) {
+    z.xyz *= factor * vec3(-1., -1., -1.);
+    z.xyz += offset;
+    z.w *= abs(factor);
+    return z;
+  }
+
+  vec4 mandel(vec4 z, vec3 offset) {
+    float x = z.x;
+    float y = z.y;
+
+    z.w = 2. * length(z.xy) * z.w + 1.;
+
+    z.x = x*x - y*y + offset.x;
+    z.y = 2.*x*y + offset.y;
+
+    return z;
+  }
+
+  // Solids
+  float plane(vec3 pos, vec3 normal, float offset) {
+    return dot(pos, normal) - offset;
+  }
+
+  float box(vec3 pos, float radius) {
+    vec3 u = abs(pos);
+    return max(max(u.x, u.y), u.z) - radius;
+  }
+
+  float sphere(vec3 pos, float radius) {
+    return length(pos) - radius;
+  }
+
+  float cylinder(vec2 pos, float radius) {
+    return length(pos) - radius;
+  }
+
+  float torus(vec2 pos1, float pos2, float radius1, float radius2) {
+    float r = length(pos1) - radius1;
+    return (length(vec2(r, pos2)) - radius2);
+  }
+
+  float cross2(vec2 pos, float radius) {
+    return length(pos) - radius;
+  }
+
+  float cross3(vec3 pos, float radius) {
+    return min(min(cross2(pos.xy, radius), cross2(pos.xz, radius)), cross2(pos.yz, radius));
+  }
+
+  // Distance estimation
+
+  float distanceColor(const vec3 pos, out vec3 color) {
+    vec4 z = vec4(pos, 1.0);
+    vec4 z2 = z;
+
+    z *= .05;
+
+    z=invert(z, 1.2);
+    z=fold(z);
+    z.xyz -= shiftOffset;
+    z=fold(z);
+    z.xyz += shiftOffset;
+
+    vec3 offset = z.xyz;
+
+    z=mandel(z, z.xyz);
+    z.w *= .5;
+
+    z=invert(z, 1.2);
+
+    z=mandel(z, z.xyz);
+    z.w *= .5;
+
+    float d1 = sphere(z.xyz, .5) / z.w;
+
+    float d2 = -cylinder(z2.yz, 3.0);
+
+    color = vec3(1.0, 1.0, 1.0);
+    return max(d1, d2);
+
+  }
+
+  float distance(const vec3 pos) {
+    vec3 dummy;
+    return distanceColor(pos, dummy);
+  }
+
+
+  // Raymarcher
+  vec3 raymarch(const vec3 origin, vec3 ray, inout float d, out float error) {
+
+    vec3 point = origin + ray * d;
+
+    float f;
+    for (int i = 0; i < STEPS; i++) {
+      f = distance(point);
+      d      += f;
+      point  += ray * f;
+      if (abs(f) < EPSILON || d > MAX_DEPTH) break;
+    }
+
+    error = f;
+    return point;
+  }
+
+  void main() {
+
+    vec3 origin = raytracePosition;
+    vec3 ray = normalize(vRay);
+    vec3 point;
+    float f;
+
+    // Start from origin
+    float d = 0.0;
+    point = raymarch(origin, ray, d, f);
+
+    if (f < .05 && d < MAX_DEPTH) {
+
+      // Find normal at point
+      vec3 color;
+      float dp = distanceColor(point, color);
+
+      float dx = distance(point + vec3(DELTA, 0.0, 0.0));
+      float dy = distance(point + vec3(0.0, DELTA, 0.0));
+      float dz = distance(point + vec3(0.0, 0.0, DELTA));
+      vec3 normal = normalize(vec3(dx, dy, dz) - dp);
+
+      // AO
+      float s = 0.0, q = 0.0;
+      for (float i = 0.0; i < 4.0; ++i) {
+        q = i * .2 + q * .02;
+        s += (distance(point + normal * q) - dp) / q;
+      }
+      float ao = clamp(s, 0.0, 1.0);
+
+      // Light
+      float diffuse = max(0.0, dot(normal, vec3(-0.866, 0.5, 0.2)) * .75 + .25);
+
+      // Exponential fog
+      float fog = exp(-FOG_DENSITY * length(origin - point));
+
+      gl_FragColor = vec4(vec3(sqrt(fog * diffuse * ao)) * color, 1.0);
+    }
+    else {
+
+      // Background
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 0.5);
+
+    }
+
+  }
+  </script>
+
+  <script type="text/javascript" charset="utf-8">
+
+    DomReady.ready(function () {
+      ThreeBox.preload([
+        '../build/ThreeRTT.glsl.html',
+      ], function (assets) {
+
+        // init threebox
+        var world = window.world = threeBox({
+          cameraControls: true,
+          orbit: 10,
+          theta: 0,
+          phi: τ/4,
+          scale: 2,
+        }).start();
+
+        // raytracing parameters
+        var opts = {
+//          width: 512,
+//          height: 512,
+        };
+
+        // uniforms for animation
+        var uniforms = {
+          shiftAngle: {
+            type: 'f',
+            value: 0,
+          },
+          shiftOffset: {
+            type: 'v3',
+            value: new THREE.Vector3(),
+          },
+        };
+
+        // set up raytrace pass
+        var camera = world.tCamera();
+        var raytrace = window.raytrace = world.rtt(opts).raytrace(camera, 'rt-test', {}, uniforms);
+        var controls = world.getCameraControls();
+
+        world.loop().hookPreRender(function () {
+          var th = +new Date() * .0005;
+
+          // animate parameters
+          var v = uniforms.shiftOffset.value;
+          v.x = Math.cos(th) * .5;
+          v.y = Math.sin(th * .124 + v.x) * .5;
+          v.z = Math.sin(th * .357 + v.y + v.x) * .5;
+          uniforms.shiftAngle.value = (th * .5 + Math.cos(th * .11)) * .1 % (Math.PI * 2);
+        })
+
+        // display raytrace result
+        world.compose(raytrace);
+
+      });
+    });
+
+  </script>
+
+</head>
+<body>
+</body>
+</html>
