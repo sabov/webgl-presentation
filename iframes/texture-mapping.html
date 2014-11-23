@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Three.js Texture Mapping</title>
-    
+
     <style type="text/css">
       html { overflow: hidden; }
       body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
@@ -37,7 +37,7 @@
   <body>
 
     <div id="container"></div>
-    
+
     <div id="texture" class="color-map"></div>
 
     <script src="three/three.min.js"></script>
@@ -160,12 +160,12 @@
 
 
 
-        
+
         colorMap = THREE.ImageUtils.loadTexture( "images/planets/earth_atmos_2048.jpg" );
         specMap = THREE.ImageUtils.loadTexture( "images/planets/earth_specular_2048.jpg" );
         normalMap = THREE.ImageUtils.loadTexture( "images/planets/earth_normal_2048.jpg" );
         alphaMap = THREE.ImageUtils.loadTexture( "images/planets/earth_alpha_2048.jpg" );
-        
+
 
         // var material  = new THREE.MeshPhongMaterial( { ambient: 0xffffff, color: 0xffffff , specular: 0x333333, shininess: 15, map: colorMap } );
 
@@ -249,7 +249,7 @@
 
       function setupGui() {
         // dat.GUI debugging -----------------------------------------
-        
+
         var opts = {
           normalScale: 1,
           animating: false
@@ -360,7 +360,7 @@
 
       onmessage = function(e) {
         // paused = (e.data == 'pause' || e.data == 'slide:stop');
-        step = e.data.director.args[0];
+        step = e.data.mathBoxDirector.args[0];
         applyStep( step );
       };
 
@@ -381,7 +381,7 @@
         if (e.keyCode == 38 || e.keyCode == 37) back();
         if (e.keyCode == 40 || e.keyCode == 39) forward();
       });
-      
+
 
     </script>
 

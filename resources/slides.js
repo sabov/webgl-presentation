@@ -73,8 +73,9 @@ $(function() {
   });
 
   // Interface with websocket for remote navigation commands
-  (function () {
-    var host = window.document.location.host.replace(/:.*/, '');
+  //(function () {
+    //var host = window.document.location.host.replace(/:.*/, '');
+    /*
     var ws = new WebSocket('ws://' + host + ':8080');
     ws.onmessage = function (event) {
       var data = JSON.parse(event.data);
@@ -96,6 +97,7 @@ $(function() {
       }
     };
   })();
+  */
 
   // Respond to presentation deck navigation
   var $frames = null;

@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Three.js Material Options</title>
-    
+
     <style type="text/css">
       html { overflow: hidden; }
       body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
@@ -42,7 +42,7 @@
   <body>
 
     <div id="container"></div>
-    
+
     <script src="three/three.min.js"></script>
     <script src="three/controls/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
@@ -97,7 +97,7 @@
         light = new THREE.DirectionalLight( 0xdddddd, .8 );
         light.position.set( -80, 80, 80 );
         scene.add( light );
-        
+
         // var lightHelper = new THREE.DirectionalLightHelper( light, 20 );
         // scene.add( lightHelper );
 
@@ -113,7 +113,7 @@
         fnh = new THREE.FaceNormalsHelper( mesh, 15, 0xff0000 );
         fnh.visible = false;
         mesh.add( fnh );
-        
+
         vnh = new THREE.VertexNormalsHelper( mesh, 15, 0x0000ff );
         vnh.visible = false;
         mesh.add( vnh );
@@ -172,7 +172,7 @@
 
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );  
+        renderer.setSize( window.innerWidth, window.innerHeight );
       }
 
       //
@@ -187,7 +187,7 @@
 
       function render() {
         var delta = clock.getDelta();
-        
+
         mesh.rotation.y -= 0.2 * delta;
 
         renderer.render( scene, camera );
@@ -211,14 +211,14 @@
 
         tween.start();
       }
-      
+
 
       var step = 1;
 
 
       function applyStep(step) {
         // console.log(step);
-        
+
         if   (step == 1) {
           mesh.material.shading = THREE.SmoothShading; // default
           mesh.geometry.normalsNeedUpdate = true;
@@ -286,7 +286,7 @@
 
       onmessage = function(e) {
         // paused = (e.data == 'pause' || e.data == 'slide:stop');
-        step = e.data.director.args[0];
+        step = e.data.mathBoxDirector.args[0];
         applyStep( step );
       };
 

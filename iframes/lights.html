@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Three.js Lights</title>
-    
+
     <style type="text/css">
       html { overflow: hidden; }
       body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
@@ -42,7 +42,7 @@
   <body>
 
     <div id="container"></div>
-    
+
     <script src="three/three.min.js"></script>
     <script src="three/controls/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
@@ -101,7 +101,7 @@
         dLight = new THREE.DirectionalLight( white, .8 );
         dLight.position.set( -80, 80, 80 );
         scene.add( dLight );
-        
+
         dLightHelper = new THREE.DirectionalLightHelper( dLight, 15 );
         scene.add( dLightHelper );
 
@@ -134,7 +134,7 @@
 
 
         material = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, shininess: 40, shading: THREE.SmoothShading });
-        
+
         var planeGeo = new THREE.PlaneBufferGeometry( 700, 700, 1, 1 );
         mesh = new THREE.Mesh( planeGeo, material );
         mesh.rotation.x = -Math.PI/2;
@@ -200,7 +200,7 @@
 
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );  
+        renderer.setSize( window.innerWidth, window.innerHeight );
       }
 
       function onDocumentMouseMove( event ) {
@@ -261,14 +261,14 @@
 
         tween.start();
       }
-      
+
 
       var step = 1;
 
 
       function applyStep(step) {
         // console.log(step);
-        
+
         if   (step == 1) {
 
         }
@@ -296,7 +296,7 @@
           setupTween(dLight.color, 'r', lightBlue.r);
           setupTween(dLight.color, 'g', lightBlue.g);
           setupTween(dLight.color, 'b', lightBlue.b);
-        
+
           setupTween(dLight, 'intensity', 0.8);
         }
         else if (step == 8) {
@@ -379,7 +379,7 @@
 
       onmessage = function(e) {
         // paused = (e.data == 'pause' || e.data == 'slide:stop');
-        step = e.data.director.args[0];
+        step = e.data.mathBoxDirector.args[0];
         applyStep( step );
       };
 

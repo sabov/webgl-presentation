@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Three.js JSON Loader</title>
-    
+
     <style type="text/css">
       html { overflow: hidden; }
       body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
@@ -42,7 +42,7 @@
   <body>
 
     <div id="container"></div>
-    
+
     <script src="three/three.min.js"></script>
     <script src="three/controls/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
@@ -95,7 +95,7 @@
         keyLight = new THREE.DirectionalLight( 0xdddddd, .7 );
         keyLight.position.set( -80, 60, 80 );
         scene.add( keyLight );
-        
+
         // keyLightHelper = new THREE.DirectionalLightHelper( keyLight, 15 );
         // scene.add( keyLightHelper );
 
@@ -104,7 +104,7 @@
         fillLight = new THREE.DirectionalLight( 0xdddddd, .3 );
         fillLight.position.set( 80, 40, 40 );
         scene.add( fillLight );
-        
+
         // fillLightHelper = new THREE.DirectionalLightHelper( fillLight, 15 );
         // scene.add( fillLightHelper );
 
@@ -113,7 +113,7 @@
         rimLight = new THREE.DirectionalLight( 0xdddddd, .6 );
         rimLight.position.set( -20, 80, -80 );
         scene.add( rimLight );
-        
+
         // rimLightHelper = new THREE.DirectionalLightHelper( rimLight, 15 );
         // scene.add( rimLightHelper );
 
@@ -125,7 +125,7 @@
         // var helper = new THREE.GridHelper( 120, 20 );
         // scene.add( helper );
 
-        
+
         // var material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
         // var material = new THREE.MeshBasicMaterial({ color: 0x333333, wireframe: true });
@@ -144,7 +144,7 @@
           // scene.add( helper );
         });
 
-        
+
 
 
         // setupTween();
@@ -239,7 +239,7 @@
         var update  = function(){
           obj[prop] = current.property;
         }
-        
+
         var current = { property: obj[prop] };
         var target = { property: targetValue };
 
@@ -264,7 +264,7 @@
 
       onmessage = function(e) {
         // paused = (e.data == 'pause' || e.data == 'slide:stop');
-        step = e.data.director.args[0];
+        step = e.data.mathBoxDirector.args[0];
         applyStep( step );
       };
 

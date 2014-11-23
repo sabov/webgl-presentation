@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Three.js UVs</title>
-    
+
     <style type="text/css">
       html { overflow: hidden; }
       body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
@@ -39,7 +39,7 @@
   <body>
 
     <div id="container"></div>
-    
+
     <div id="texture"></div>
 
     <script src="three/three.min.js"></script>
@@ -74,10 +74,10 @@
       // https://www.udacity.com/course/viewer#!/c-cs291/l-124106595/m-176364092
 
       // http://solutiondesign.com/webgl-and-three-js-texture-mapping/
-      
+
       // The faceVertexUvs property of geometry is an array of arrays that
       // contains the coordinate mapping for each face of the geometry.
-      
+
       // mesh.geometry.faceVertexUvs[0][0] = [ bricks[0], bricks[1], bricks[3] ];
 
       // mesh.material.map.wrapS = mesh.material.wrapS = THREE.RepeatWrapping;
@@ -96,7 +96,7 @@
         // d.appendChild( img );
 
         d.appendChild( THREE.UVsDebug(geometry, 512) );
-        
+
         document.body.appendChild(d);
       }
 
@@ -289,7 +289,7 @@
         else if (step == 3) {
           mesh.material.map = colorMap;
           mesh.material.needsUpdate = true;
-          
+
           helper.visible = true;
           document.querySelector(".uv-map canvas").style.display = 'block';
         }
@@ -305,7 +305,7 @@
 
       onmessage = function(e) {
         // paused = (e.data == 'pause' || e.data == 'slide:stop');
-        step = e.data.director.args[0];
+        step = e.data.mathBoxDirector.args[0];
         applyStep( step );
       };
 
@@ -326,7 +326,7 @@
         if (e.keyCode == 38 || e.keyCode == 37) back();
         if (e.keyCode == 40 || e.keyCode == 39) forward();
       });
-      
+
 
     </script>
 

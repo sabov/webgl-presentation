@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <title>Three.js Materials</title>
-    
+
     <style type="text/css">
       html { overflow: hidden; }
       body { margin: 0; padding: 0; overflow: hidden; font-family: Monospace; font-size: 13px; line-height: 20px; color: #333; }
@@ -42,7 +42,7 @@
   <body>
 
     <div id="container"></div>
-    
+
     <script src="three/three.min.js"></script>
     <script src="three/controls/OrbitControls.js"></script>
     <script src="three/Detector.js"></script>
@@ -99,7 +99,7 @@
         var light = new THREE.DirectionalLight( 0xdddddd, 1 );
         light.position.set( -100, 100, 100 );
         scene.add( light );
-        
+
         // var lightHelper = new THREE.DirectionalLightHelper( light, 20 );
         // scene.add( lightHelper );
 
@@ -205,7 +205,7 @@
 
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );  
+        renderer.setSize( window.innerWidth, window.innerHeight );
       }
 
       //
@@ -234,7 +234,7 @@
         var update  = function(){
           obj[prop] = current.property;
         }
-        
+
         var current = { property: obj[prop] };
         var target = { property: targetValue };
 
@@ -249,7 +249,7 @@
 
       function applyStep(step) {
         // console.log(step);
-        
+
         if   (step == 1) {
           setupTween( camera.position, 'x', 0 ); // default
           setupTween( mesh1.position, 'y', 0 );
@@ -275,7 +275,7 @@
           setupTween( camera.position, 'x', mesh4.position.x );
           setupTween( mesh3.position, 'y', 0 );
           setupTween( mesh4.position, 'y', 20 );
-          
+
           vnh.visible = false;
         }
         else if (step == 6) {
@@ -285,7 +285,7 @@
 
       onmessage = function(e) {
         // paused = (e.data == 'pause' || e.data == 'slide:stop');
-        step = e.data.director.args[0];
+        step = e.data.mathBoxDirector.args[0];
         applyStep( step );
       };
 
