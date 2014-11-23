@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=1480px">
+
+  <title>WebGL</title>
+
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" type="text/css">
+  <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet" type="text/css">
+
+  <!-- Required stylesheet -->
+  <link rel="stylesheet" href="/deck.js/core/deck.core.css">
+  <link rel="stylesheet" media="screen" href="/deck.js/extensions/menu/deck.menu.css">
+  <link rel="stylesheet" media="screen" href="/deck.js/extensions/goto/deck.goto.css">
+  <link rel="stylesheet" media="screen" href="/deck.js/extensions/status/deck.status.css">
+  <link rel="stylesheet" media="screen" href="/deck.js/extensions/navigation/deck.navigation.css">
+  <link rel="stylesheet" media="screen" href="resources/theme.css">
+/
+  <!-- Theme -->
+  <link rel="stylesheet" href="resources/transition.css">
+  <link rel="stylesheet" href="resources/layout.css">
+  <link rel="stylesheet" href="resources/typography.css">
+
+  <!-- Required Modernizr file -->
+  <script src="/deck.js/modernizr.custom.js"></script>
+
+  <!-- Typekit fonts -->
+  <script type="text/javascript" src="//use.typekit.net/nde6wmn.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+  <!-- Required JS files. -->
+  <script src="/deck.js/jquery.min.js"></script>
+  <script src="/deck.js/core/deck.core.js"></script>
+  <script src="/mathbox/vendor/underscore.js"></script>
+  <script src="/resources/slides.js"></script>
+
+  <!-- MathJax typesetting -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      "HTML-CSS": { availableFonts: ["TeX"] },
+      extensions: ["tex2jax.js"],
+      jax: ["input/TeX","output/HTML-CSS"],
+      tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+//      messageStyle: 'none',
+    });
+  </script>
+  <!--<script type="text/javascript" src="../mathjax/MathJax.js?config=TeX-AMS_HTML"></script>-->
+
+  <script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</head>
+<body>
+
+<div class="deck-container">
+
+<!-- Begin slides. -->
+<section class="slide">
+  <iframe src="iframes/cube-title.html" frameborder="0"></iframe>
+  <div class="page-cover">
+    <h1 class="cover-title">Intro to WebGL<small>with Three.js</small></h1>
+  </div>
+</section>
+
+<section class="slide t-1">
+  <h1>What is 3D?</h1>
+</section>
+
+<section class="slide zoom">
+  <iframe src="iframes/mathbox.html#2" class="mathbox"></iframe>
+  <div class="slide"></div>
+  <div class="slide"></div>
+  <div class="slide"></div>
+</section>
+
+<section class="slide t-1">
+  <h1>Rendering</h1>
+</section>
+
+<section class="slide page-centerfold zoom">
+  <iframe src="iframes/mathbox.html#1" class="mathbox"></iframe>
+  <div class="slide temp abs-tc"><h3 class="mj">Bresenham Lines</h3></div>
+  <div class="slide temp abs-tc"><h3 class="mj">Scanline Rendering</h3></div>
+  <div class="slide"></div>
+  <div class="slide temp abs-tc"><h3 class="mj">Snap To Pixel</h3></div>
+  <div class="slide temp abs-tc"><h3 class="mj">"Anti-Aliasing!"</h3></div>
+  <div class="slide temp abs-tc"><h3 class="mj">Sub-Pixel Accuracy</h3></div>
+  <div class="slide temp abs-tc"><h3 class="mj">Samples</h3></div>
+  <div class="slide temp abs-tl box images delay20" style="width: 1100px">
+    <div class="l">
+      <h3 class="mj">Vector World</h3>
+    </div>
+    <div class="r">
+      <h3 class="mj">Raster World</h3>
+    </div>
+    <div class="l cl" style="width: 920px; padding-top: 300px">
+      <h3 class="mj">Sampling</h3>
+    </div>
+  </div>
+</section>
+
+<!-- -->
+
+<section class="slide t-1">
+  <h1>Shaders</h1>
+</section>
+
+
+<section class="slide zoom">
+  <iframe src="iframes/mathbox.html#3" class="mathbox"></iframe>
+
+  <div class="slide delay10 temp inflate">
+    <div class="box t1">
+      <div class="r"><img src="images/raster-pipeline.png" width="700" alt=""></div>
+    </div>    
+  </div>
+  <div class="slide temp inflate">
+    <div class="box">
+      <div class="r"><img src="images/raster-pipeline-2.png" width="700" alt=""></div>
+    </div>    
+  </div>
+
+  <div class="slide temp inflate">
+    <div class="abs-tc"><h3 class="mj">Vertex Shader</h3></div><br>
+    <pre class="wrap overlay halfR small">
+<em>// Global Variables</em>
+<span class="mj-blue">uniform</span> mat4 projectionMatrix;
+<span class="mj-blue">uniform</span> mat4 viewMatrix;
+<span class="mj-blue">uniform</span> mat4 modelMatrix;
+
+<em>// Per Vertex Attributes</em>
+<span class="mj-green">attribute</span> vec3 position;
+
+<em>// Per Vertex Code</em>
+void main() {
+  <span class="mj-red">gl_Position</span> = projectionMatrix
+              * viewMatrix
+              * modelMatrix
+              * vec4(position, 1.0);
+}</pre>
+  </div>
+
+  <div class="slide temp inflate">
+    <div class="abs-tc"><h3 class="mj">Fragment Shader</h3></div><br>
+    <pre class="wrap overlay halfR small">
+<em>// Global Variables</em>
+<span class="mj-blue">uniform</span> vec3 color;
+<span class="mj-blue">uniform</span> vec3 direction;
+
+<em>// Interpolated Per-Vertex Quantities</em>
+<span class="mj-green">varying</span> vec3 vNormal;
+
+<em>// Per Fragment Code</em>
+void main() {
+  float diffuse = dot(vNormal, direction);
+  <span class="mj-red">gl_FragColor</span> =
+    vec4(diffuse * color, 1.0);
+}</pre>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>WebGL</h2>
+
+  <p>JavaScript API for rendering interactive 2D and 3D graphics<br>
+    inside an HTML <code class="language-markup">&lt;canvas&gt;</code> element.</p>
+  <div class="slide">
+    <h3>Browser Support</h3>
+    <img src="images/webgl-browser-support.png" alt="">
+  </div>
+</section>
+
+
+
+<section class="slide">
+  <h1>WebGL vs OpenGL</h1>
+</section>
+<section class="slide">
+    <ul>
+        <li>Browser based OpenGL ES 2.0</li>
+        <li>HTML5, CSS3</li>
+        <li>JavaScript</li>
+        <li>Paste and play</li>
+    </ul>
+    <ul>
+        <li>Performance</li>
+        <li>Current OpenGL version - 4.5</li>
+    </ul>
+</section>
+
+<section class="slide">
+  <h1>Thanks!</h1>
+  <div style="text-align: center;"><span style="font-weight: bold">More like this:</span><br>
+    <a href="http://acko.net/files/fullfrontal/fullfrontal/wdcode/online.html" target="_blank">Making Things With Maths</a> Talk + Video<br>
+    <a href="http://acko.net/files/never-seen-the-sky/git/" target="_blank">Never Seen The Sky</a> Xmas Demo
+    </div>
+  <div style="text-align: center; opacity: .5"><br><br>Cyberdemon © id Software, Three.js port by AlteredQualia</div>
+</section>
+
+
+<!-- End slides. -->
+</div>
+
+<div id="message">
+  <script type="text/javascript">
+  if (!document.createElement('canvas').getContext('experimental-webgl')) {
+    document.write('<p class="error"><strong>Sorry! Your browser does not support WebGL, which is required to view this presentation.</strong><br>Video will be made available soon.<!--<br><br>You can <a href="http://www.youtube.com/watch?v=GNO_CYUjMK8">view the video on YouTube</a> instead.<br><br>Or you can use Google Chrome or Mozilla Firefox.</p>-->');
+  }
+  else {
+    document.write('<p>Note: these slides use cutting edge CSS 3 and WebGL features. It is recommended to use Google Chrome to view them.</p>');
+  }
+  </script>
+</div>
+
+<div id="context">
+  Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>Original slides by Steven Wittens <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">on Github</a>.
+</div>
+
+</section>
+
+
+<!-- End slides. -->
+</div>
+
+<div id="message">
+  <script type="text/javascript">
+  if (!document.createElement('canvas').getContext('experimental-webgl')) {
+    document.write('<p class="error"><strong>Sorry! Your browser does not support WebGL, which is required to view this presentation.</strong><br>Video will be made available soon.<!--<br><br>You can <a href="http://www.youtube.com/watch?v=GNO_CYUjMK8">view the video on YouTube</a> instead.<br><br>Or you can use Google Chrome or Mozilla Firefox.</p>-->');
+  }
+  else {
+    document.write('<p>Note: these slides use cutting edge CSS 3 and WebGL features. It is recommended to use Google Chrome to view them.</p>');
+  }
+  </script>
+</div>
+
+<div id="context">
+  Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>Original slides by Steven Wittens <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">on Github</a>.
+</div>
+
+<div id="controls">
+  <a href="javascript:$.deck('prev')">‹</a>
+  <a href="javascript:$.deck('next')">›</a>
+</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-288349-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>

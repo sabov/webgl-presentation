@@ -1,0 +1,535 @@
+<script type="text/javascript" charset="utf-8">
+
+function init() {
+  
+}
+
+init();
+
+// Prepare mathbox
+var lastStep = 0, activePoint = [2, 1, 0];
+window.mathBoxSetup = function (mathbox, director) {
+
+  mathbox
+    .viewport({
+      type: 'projective',
+      range: [[-2, 2], [-2, 2], [-2, 2]],
+      scale: [.85, .85, .85],
+    })
+    .camera({
+      phi: τ/4,
+      orbit: 3.5,
+    })
+
+  ThreeBox.preload([
+    '../images/awesome.png',
+  ], function (assets) {
+
+    var exports = window.exports = {
+      assets: assets,
+      world: mathbox.world(),
+      scene: mathbox.world().tScene(),
+    };
+
+    var cubeSurface = null;
+    exports.world.loop().hookPreRender(function () {
+
+      // Hackity hack to fix DV attributes disappearing
+      var s = mathbox.select('#surfaceW');
+      if (s.length) {
+        cubeSurface = s[0];
+      }
+      if (cubeSurface) {
+        cubeSurface.mesh.material.needsUpdate = true;
+      }
+
+    });
+    exports.world.loop().hookPostRender(function () {
+    });
+
+  });
+
+  director.on('go', function (step, direction) {
+    lastStep = step;
+  });
+}
+
+var darkred = 0x220000, _darkred = '#200',
+    orangered = 0xc03000, _orangered = "#c03000",
+    green = 0x50c020, _green = "#50c020",
+    indigo = 0x7040f0,
+    gold = 0xD0A020,
+    land = 0x509000, _land = "#509000",
+    blue = 0x3080ff,
+    red = 0xC02050,
+    surfacered = 0xdf5000, _slate = '#efb030',
+    purple = 0xd040b0,
+    water = 0x103070,
+    gray = 0xa0a0a0,
+    white = 0xffffff,
+    black = 0x000000,
+    channelR = 0xff1010,
+    channelG = 0x10d010,
+    channelB = 0x1030f0,
+    creme = 0xffffdd;
+
+var box = [
+      [-2, -2],
+      [-2,  2],
+      [ 2,  2],
+      [ 2, -2],
+      [-2, -2],
+    ];
+
+var fd = 2, fo = -2;
+
+var frustum = [
+ [0, 0, fd+fo], [2, 2, -fd+fo],
+ [0, 0, fd+fo], [-2, 2, -fd+fo],
+ [0, 0, fd+fo], [2, -2, -fd+fo],
+ [0, 0, fd+fo], [-2, -2, -fd+fo],
+];
+
+var nullFrustum = [
+ [0, 0, fd+fo], [0, 0, fd+fo],
+ [0, 0, fd+fo], [0, 0, fd+fo],
+ [0, 0, fd+fo], [0, 0, fd+fo],
+ [0, 0, fd+fo], [0, 0, fd+fo],
+];
+
+var fo2 = .04, fd2 = 2, fr = .5, ar = 1.5;
+var frustum2 = [
+ [0, 0, fo2], [fr*ar, fr, fo2+fd2],
+ [0, 0, fo2], [-fr*ar, fr, fo2+fd2],
+ [0, 0, fo2], [fr*ar, -fr, fo2+fd2],
+ [0, 0, fo2], [-fr*ar, -fr, fo2+fd2],
+];
+
+var nullFrustum2 = [
+ [0, 0, fo2], [0, 0, fo2],
+ [0, 0, fo2], [0, 0, fo2],
+ [0, 0, fo2], [0, 0, fo2],
+ [0, 0, fo2], [0, 0, fo2],
+];
+
+function mToArray(m) {
+  m = m.flattenToArray([]);
+  return [m.slice(0, 4), m.slice(4, 8), m.slice(8, 12), m.slice(12, 16)];
+}
+
+var mi = new THREE.Matrix4();
+
+var m1 = new THREE.Matrix4(.86, .5, 0, 0,
+                           -.5, .86, 0, 0,
+                           0, 0, 1, 0,
+                           0, 0, 0, 1);
+var m2 = new THREE.Matrix4(1.5, 0, 0, 0,
+                           0, 1, 0, 0,
+                           0, 0, 1, 0,
+                           0, 0, 0, 1);
+var m3 = new THREE.Matrix4(1.1, 0, 0, 0,
+                           .5, 1, 0, 0,
+                           0, 0, 1, 0,
+                           0, 0, 0, 1);
+var m4 = new THREE.Matrix4(.7, .3, 0, 0,
+                           -.5, .5, 0, 0,
+                           0, 0, 1, 0,
+                           0, 0, 0, 1);
+
+var s1 = m1;
+var s2 = (new THREE.Matrix4()).multiply(m2, s1);
+var s3 = (new THREE.Matrix4()).multiply(m3, s2);
+
+function xp(x, i){
+  return [[1, 0], [2, 0]][i];
+}
+
+function yp(x, i){
+  return [[2], [2, 1]][i];
+}
+
+function rp(x, i){
+  return [[0], [2, 1]][i];
+}
+
+function pp() {
+  return [2, 1];
+}
+
+function xp2(x, i){
+  var p = pp2();
+  return [[0, 0], [p[0], 0]][i];
+}
+
+function yp2(x, i){
+  var p = pp2();
+  return [[p[0]], p][i];
+}
+
+function rp2(x, i){
+  var p = pp2();
+  return [[0], p][i];
+}
+
+function pp2() {
+  var t = Math.max(0, director[0].clock(10) - 1.75);
+  t = t<.5 ? t*t : t-.25;
+  return [Math.cos(t) * 1.75, -Math.sin(t) * 1.75];
+}
+
+
+window.mathBoxScript = [
+
+  // World Space
+  [
+    ['add', 'platonic', {
+      id: 'cube',
+      type: 'cube',
+      color: 0x50c020,
+      shaded: true,
+      opacity: 0,
+      mathScale: [.25, .25, .25],
+      zIndex: 50,
+    }, {
+      delay: 0,
+      duration: 1,
+    }],
+    ['add', 'vector', {
+      id: 'frustum',
+      n: 4,
+      data: nullFrustum,
+      lineWidth: 6,
+      color: black,
+      opacity: .5,
+      arrow: false,
+    }, {
+      delay: 0,
+      duration: 1,
+    }],
+    ['add', 'surface', {
+      n: 4,
+      id: 'surfaceW',
+      domain: [[-2, 2], [-2, 2]],
+      expression: function (x, y, i, j) {
+        return [x, 0, y];
+      },
+      color: 0xefefef,
+      opacity: 0,
+      zIndex: -20,
+      mathPosition: [4.5, 0, 0],
+    }, {
+      delay: 0,
+      duration: 1,
+    }],
+    ['add', 'grid', {
+      id: 'gridW',
+      n: 2,
+      ticks: [2, 2],
+      tickScale: [2, 2],
+      axis: [0, 2],
+      color: 0x404040,
+      opacity: 0,
+      lineWidth: 2,
+      mathPosition: [4.5, 0, 0],
+      zIndex: 10,
+    }, {
+      delay: 0,
+      duration: 1,
+    }],
+    ['add', 'grid', {
+      id: 'gridW2',
+      n: 2,
+      ticks: [10, 10],
+      tickScale: [2, 2],
+      axis: [0, 2],
+      color: 0x404040,
+      opacity: 0,
+      lineWidth: 2,
+      mathPosition: [4.5, 0, 0],
+      zIndex: 10,
+    }, {
+      delay: 0,
+      duration: 1,
+    }],
+    ['clone', '#cube', {
+      id: 'cubeW',
+      mathPosition: [4.5+.75, .125, -.3],
+      mathRotation: [0, 1.2, 0],
+      mathScale: [.25*.9, .25*.5, .25*2],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['clone', '#x', {
+      id: 'xW',
+      mathPosition: [4.5+.75, .125, -.3],
+      mathRotation: [0, 1.2, 0],
+      mathScale: [.9, .5, 2],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['clone', '#y', {
+      id: 'yW',
+      mathPosition: [4.5+.75, .125, -.3],
+      mathRotation: [0, 1.2, 0],
+      mathScale: [.9, .5, 2],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['clone', '#z', {
+      id: 'zW',
+      mathPosition: [4.5+.75, .125, -.3],
+      mathRotation: [0, 1.2, 0],
+      mathScale: [.9, .5, 2],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['clone', '#xaxis', {
+      id: 'xaxisW',
+      mathPosition: [4.5, 0, 0],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['clone', '#yaxis', {
+      id: 'yaxisW',
+      mathPosition: [4.5, 0, 0],
+      opacity: 0,
+    }, {
+      duration: 1,
+      opacity: 0,
+    }],
+    ['clone', '#zaxis', {
+      id: 'zaxisW',
+      mathPosition: [4.5, 0, 0],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['animate', '#xaxis, #yaxis, #zaxis', {
+      opacity: 0,
+    }, {
+      duration: 500,
+    }],
+    ['animate', '#cubeW, #xW, #yW, #zW', {
+      opacity: .99,
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+    ['animate', '#surfaceW', {
+      opacity: .25,
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+    ['animate', '#gridW', {
+      opacity: .3,
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+    ['animate', '#gridW2', {
+      opacity: .15,
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+    ['animate', '#xaxisW, #yaxisW, #zaxisW', {
+      opacity: .75,
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+    ['animate', 'viewport', {
+      position: [-1.5, 0, .3],
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+    ['animate', 'camera', {
+      lookAt: [0, 0, 0],
+      phi: τ/4-.95,
+      theta: .3,
+    }, {
+      delay: 100,
+      duration: 2000,
+    }],
+
+    ['add', 'surface', {
+      id: 'camBody',
+      n: [13, 8],
+      domain: [[0, τ], [0.000000001, .996]],
+      expression: function (x, y, i, j) {
+        var c = Math.cos(x);
+        var s = Math.sin(x);
+        var r = Math.pow(Math.sin(y*π),.1);
+        function p(x) { return Math.sqrt(Math.abs(x)) * (x>0?1:-1)}
+        return [p(c)*r, p(s)*r/1.2, y*2-1];
+      },
+      color: blue,
+      mathPosition: [5.5, 2, 2],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [.15, .15, .15],
+    }],
+    ['add', 'surface', {
+      id: 'camLens',
+      n: [13, 4],
+      domain: [[0, τ], [0.01, 1]],
+      expression: function (x, y, i, j) {
+        var c = Math.cos(x);
+        var s = Math.sin(x);
+        function p(x) { return Math.sqrt(Math.abs(x)) * (x>0?1:-1)}
+        return [p(c)*y, p(s)*y/1.33, y + .4];
+      },
+      color: blue,
+      mathPosition: [5.5, 2, 2],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [.15, .15, .15],
+    }],
+    ['set', '#frustum', {
+      opacity: 0,
+      color: blue,
+      data: frustum2,
+      mathPosition: [5.5, 2, 2],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [2, 2, 2],
+    }],
+    ['animate', '#frustum', {
+      opacity: .5,
+    }, {
+      delay: 100,
+      duration: 1000,
+    }],
+  ],
+
+  // View Space
+  [
+    ['animate', '#xaxisW, #yaxisW, #zaxisW, #gridW', {
+      opacity: 0,
+    }, {
+      duration: 500,
+    }],
+    ['clone', '#xaxis', {
+      id: 'xaxisV',
+      mathPosition: [5.5, 2*.95, 2*.95],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [.8, .8, .8],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['clone', '#yaxis', {
+      id: 'yaxisV',
+      mathPosition: [5.5, 2*.95, 2*.95],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [.8, .8, .8],
+      opacity: 0,
+    }, {
+      duration: 1,
+      opacity: 0,
+    }],
+    ['clone', '#zaxis', {
+      id: 'zaxisV',
+      mathPosition: [5.5, 2*.95, 2*.95],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [.8, .8, .8],
+      opacity: 0,
+    }, {
+      duration: 1,
+    }],
+    ['animate', '#xaxisV, #yaxisV, #zaxisV', {
+      opacity: .75,
+    }, {
+      duration: 500,
+    }],
+    ['animate', 'viewport', {
+      position: [0, 0, 0],
+    }, {
+      duration: 5000,
+    }],
+    ['animate', 'camera', {
+      lookAt: [5.5*.425, 2*.405, 2*.405],
+      orbit: .01,
+    }, {
+      delay: 500,
+      duration: 3000,
+    }],
+    ['animate', 'camera', {
+      phi: τ/4,
+      theta: τ/8,
+    }, {
+      delay: 1500,
+      duration: 3000,
+    }],
+  ],
+
+  // Screen space
+  [
+    ['animate', '#xaxisV, #yaxisV, #zaxisV', {
+      opacity: 0,
+    }, {
+      duration: 300,
+    }],
+    ['add', 'grid', {
+      id: 'gridS',
+      n: 2,
+      ticks: [50, 50],
+      tickScale: [2, 2],
+      axis: [0, 1],
+      color: 0x404040,
+      opacity: 0,
+      lineWidth: 3,
+      mathPosition: [5.5, 0, 0],
+      mathRotation: [-τ/8, π, 0],
+      mathScale: [.75, .75, .75],
+      zIndex: 1000,
+    }, {
+      delay: 0,
+      duration: 1,
+    }],
+    ['animate', '#gridS', {
+      opacity: .6,
+    }, {
+      duration: 1000,
+    }],
+  ],
+
+  // closing
+  [
+    ['animate', '#gridS', {
+      lineWidth: 2,
+    }, {
+      duration: 3000,
+    }],
+    ['animate', 'viewport', {
+      position: [-1.5, .3, .3],
+    }, {
+      duration: 3000,
+    }],
+    ['animate', 'camera', {
+      phi: τ/4-.7,
+      theta: .7,
+      lookAt: [0, 0, 0],
+      orbit: 3,
+    }, {
+      duration: 3000,
+    }],
+  ],
+];
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
