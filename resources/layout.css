@@ -112,7 +112,7 @@ body.offline .deck-container {
 
 /* cover page layout */
 body .deck-container .slide h1 {
-  margin-top: 270px;
+  margin-top: 280px;
 }
 body .deck-container .slide.page-cover h1 {
   margin-top: 220px;
@@ -467,11 +467,13 @@ img.inline {
   position: absolute;
   top: 50%;
   right: 0;
-  margin-right: 200px;
-  margin-top: 342px;
+  margin-right: 80px;
+  line-height: 1.2em;
+  font-size: 0.8em;
+  margin-top: 338px;
   color: #999;
-  width: 300px;
-  text-align: center;
+  width: 500px;
+  text-align: right;
 }
 #context a {
   color: #808080;

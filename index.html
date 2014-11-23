@@ -18,7 +18,6 @@
   <link rel="stylesheet" media="screen" href="/deck.js/extensions/navigation/deck.navigation.css">
   <link rel="stylesheet" media="screen" href="resources/theme.css">
   <!-- Theme -->
-  <link rel="stylesheet" href="resources/transition.css">
   <link rel="stylesheet" href="resources/layout.css">
   <link rel="stylesheet" href="resources/typography.css">
 
@@ -57,10 +56,11 @@
 
 <!-- Begin slides. -->
 <section class="slide">
-  <iframe src="iframes/cube-title.html" frameborder="0"></iframe>
+  <iframe src="iframes/cube-title.html" frameborder="0" style="height: 80%;"></iframe>
   <div class="page-cover" style="z-index: 100">
-    <h1 class="cover-title">Intro to WebGL<small>with Three.js</small></h1>
+    <h1 class="cover-title" style="margin-top: 500px;">WebGL and Three.js</h1>
   </div>
+  <h6 style="color: #666; margin-top: 20px;">ITJam Team</h6>
 </section>
 
 <section class="slide">
@@ -187,16 +187,23 @@ void main() {
 
 <section class="slide">
     <h2>WebGL vs OpenGL</h2>
-    <ul>
-        <li>Browser based OpenGL ES 2.0</li>
-        <li>HTML5, CSS3</li>
-        <li>JavaScript</li>
-        <li>Paste and play</li>
-    </ul>
-    <ul>
-        <li>Performance</li>
-        <li>Current OpenGL version - 4.5</li>
-    </ul>
+    <div class="slide" style="color: #33AE43">
+        <h3>Advantages</h3>
+        <ul>
+            <li>+ Browser based OpenGL ES 2.0</li>
+            <li>+ HTML5, CSS3</li>
+            <li>+ JavaScript</li>
+            <li>+ Paste and play</li>
+        </ul>
+    </div>
+    <br>
+    <div class="slide" style="color: #9E3433">
+        <h3>Disadvantages</h3>
+        <ul>
+            <li>- Performance</li>
+            <li>- Current OpenGL version - 4.5</li>
+        </ul>
+    </div>
 </section>
 
     <section class="slide">
@@ -207,7 +214,7 @@ void main() {
     </section>
 
     <section class="slide">
-<pre class="overlay-full language-markup" style="font-size: 32px;"><code style="font-size: 32px;">&lt;!DOCTYPE html&gt;
+<pre class="overlay-full language-markup" style="font-size: 28px;"><code style="font-size: 28px;">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;Basic Three.js App&lt;/title&gt;
@@ -446,13 +453,15 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
       <div class="slide" id="interaction4"></div>
     </section>
 
+<section class="slide" style="margin-top: 250px">
+    Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>
+    Based on <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">Making WebGL Dance</a> presentation by Steven Wittens<br>
+    and <a href="https://github.com/davidlyons/frontporch" target="_blank">Intro to WebGL
+    with Three.js</a> by David Lyons.
+</section>
+
 <section class="slide">
   <h1>Thanks!</h1>
-  <div style="text-align: center;"><span style="font-weight: bold">More like this:</span><br>
-    <a href="http://acko.net/files/fullfrontal/fullfrontal/wdcode/online.html" target="_blank">Making Things With Maths</a> Talk + Video<br>
-    <a href="http://acko.net/files/never-seen-the-sky/git/" target="_blank">Never Seen The Sky</a> Xmas Demo
-    </div>
-  <div style="text-align: center; opacity: .5"><br><br>Cyberdemon © id Software, Three.js port by AlteredQualia</div>
 </section>
 
 
@@ -464,14 +473,14 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
   if (!document.createElement('canvas').getContext('experimental-webgl')) {
     document.write('<p class="error"><strong>Sorry! Your browser does not support WebGL, which is required to view this presentation.</strong><br>Video will be made available soon.<!--<br><br>You can <a href="http://www.youtube.com/watch?v=GNO_CYUjMK8">view the video on YouTube</a> instead.<br><br>Or you can use Google Chrome or Mozilla Firefox.</p>-->');
   }
-  else {
-    document.write('<p>Note: these slides use cutting edge CSS 3 and WebGL features. It is recommended to use Google Chrome to view them.</p>');
-  }
   </script>
 </div>
 
 <div id="context">
-  Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>Original slides by Steven Wittens <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">on Github</a>.
+    Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>
+    Based on <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">Making WebGL Dance</a> presentation by Steven Wittens<br>
+    and <a href="https://github.com/davidlyons/frontporch" target="_blank">Intro to WebGL
+    with Three.js</a> by David Lyons.
 </div>
 
 </section>
@@ -485,14 +494,7 @@ INTERSECTED <span class="token operator">=</span> intersects<span class="token p
   if (!document.createElement('canvas').getContext('experimental-webgl')) {
     document.write('<p class="error"><strong>Sorry! Your browser does not support WebGL, which is required to view this presentation.</strong><br>Video will be made available soon.<!--<br><br>You can <a href="http://www.youtube.com/watch?v=GNO_CYUjMK8">view the video on YouTube</a> instead.<br><br>Or you can use Google Chrome or Mozilla Firefox.</p>-->');
   }
-  else {
-    document.write('<p>Note: these slides use cutting edge CSS 3 and WebGL features. It is recommended to use Google Chrome to view them.</p>');
-  }
   </script>
-</div>
-
-<div id="context">
-  Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>Original slides by Steven Wittens <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">on Github</a>.
 </div>
 
 <div id="controls">

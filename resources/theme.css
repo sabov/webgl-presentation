@@ -56,9 +56,9 @@ a:focus {
   display: table;
 }
 .cover-title {
-  display: table-cell;
   vertical-align: middle;
   font-size: 96px;
+  padding-top: 100px;
   line-height: 1;
 }
 .cover-inverted {
