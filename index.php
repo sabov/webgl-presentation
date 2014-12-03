@@ -330,7 +330,7 @@ camera<span class="token punctuation">.</span>position<span class="token punctua
       <div class="temp slide abs-bc"><pre><code>normalMap: texture</code></pre></div>
       <div class="temp slide abs-bc"><pre><code>specularMap: texture</code></pre></div>
       <div class="temp slide abs-bc"><pre><code>map: colorMap, specularMap: specMap, normalMap: normalMap</code></pre></div>
-      <div class="temp slide abs-bc"><pre><code>var material = new THREE.MeshPhongMaterial({
+      <div class="temp slide abs-bc"><pre style="text-align: left;"><code>var material = new THREE.MeshPhongMaterial({
   color: 0xaaaaaa,
   ambient: 0xaaaaaa,
   specular: 0x333333,
@@ -394,7 +394,7 @@ camera<span class="token punctuation">.</span>position<span class="token punctua
     <section class="slide">
       <iframe src="iframes/loader.html" frameborder="0"></iframe>
       <h2>Model Loader</h2>
-<div class="slide temp abs-bc"><pre><code>var loader = new THREE.JSONLoader();
+<div class="slide temp abs-bc"><pre style="text-align: left;"><code>var loader = new THREE.JSONLoader();
 
 loader.load("teapot.js", function( geometry, materials ) {
   material = new THREE.MeshFaceMaterial( materials );
@@ -426,37 +426,24 @@ loader.load("teapot.js", function( geometry, materials ) {
 
     <section class="slide instant">
       <iframe src="iframes/interactive-cubes-helpers.html" frameborder="0"></iframe>
-      <div class="slide"></div>
-      <div class="slide"></div>
     </section>
 
-    <section class="slide">
-<pre class="overlay-full language-none" style="font-size: 26px;"><code><span class="interaction1"><span class="token comment" spellcheck="true">// normalized device coordinates
-</span>mouse<span class="token punctuation">.</span>x <span class="token operator">=</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientX <span class="token operator">/</span> window<span class="token punctuation">.</span>innerWidth <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
-mouse<span class="token punctuation">.</span>y <span class="token operator">=</span> <span class="token operator">-</span> <span class="token punctuation">(</span> event<span class="token punctuation">.</span>clientY <span class="token operator">/</span> window<span class="token punctuation">.</span>innerHeight <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span></span>
-
-raycaster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Raycaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="interaction2"><span class="token keyword">var</span> vector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">THREE<span class="token punctuation">.</span>Vector3</span><span class="token punctuation">(</span> mouse<span class="token punctuation">.</span>x<span class="token punctuation">,</span> mouse<span class="token punctuation">.</span>y<span class="token punctuation">,</span> <span class="token number">1</span> <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">unproject<span class="token punctuation">(</span></span> camera <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
-
-<span class="interaction3">raycaster<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span> camera<span class="token punctuation">.</span>position<span class="token punctuation">,</span> vector<span class="token punctuation">.</span><span class="token function">sub<span class="token punctuation">(</span></span> camera<span class="token punctuation">.</span>position <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">normalize<span class="token punctuation">(</span></span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></span>
-
-<span class="interaction4"><span class="token keyword">var</span> intersects <span class="token operator">=</span> raycaster<span class="token punctuation">.</span><span class="token function">intersectObjects<span class="token punctuation">(</span></span> scene<span class="token punctuation">.</span>children <span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-INTERSECTED <span class="token operator">=</span> intersects<span class="token punctuation">[</span> <span class="token number">0</span> <span class="token punctuation">]</span><span class="token punctuation">.</span>object<span class="token punctuation">;</span></span></code></pre>
-      <div class="slide" id="interaction1"></div>
-      <div class="slide" id="interaction2"></div>
-      <div class="slide" id="interaction3"></div>
-      <div class="slide" id="interaction4"></div>
-    </section>
-
-<section class="slide" style="margin-top: 250px">
+<section class="slide" style="margin-top: 270px">
     Diagrams powered by <a href="http://acko.net/blog/making-mathbox" target="_blank">MathBox</a>.<br>
     Based on <a href="https://github.com/unconed/fullfrontal/tree/master/webglmath" target="_blank">Making WebGL Dance</a> presentation by Steven Wittens<br>
     and <a href="https://github.com/davidlyons/frontporch" target="_blank">Intro to WebGL
     with Three.js</a> by David Lyons.
 </section>
 
+<section class="slide">
+  <h1>WebGL playground</h1>
+    <a href="http://mrdoob.com/projects/htmleditor/" target="_blank">http://mrdoob.com/projects/htmleditor/</a>
+</section>
+
+<section class="slide">
+  <h1>Demo</h1>
+    <a href="http://sabov.github.io/boost" target="_blank">http://tiny.cc/itjam</a>
+</section>
 <section class="slide">
   <h1>Thanks!</h1>
 </section>
